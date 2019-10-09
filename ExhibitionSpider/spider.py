@@ -1,4 +1,5 @@
 import requests
+import re
 from lxml import html
 
 lists=[[] for i in range(10)]
@@ -18,6 +19,46 @@ date=tree_sub.xpath('//dl[@class="tuan-info"]/dd/div/text()')
 pavilion=tree_sub.xpath('//div[@class="bao-key"]/a/span/text()')
 host=tree_sub.xpath('//dl[@class="tuan-info mp5"]/dd/text()')
 hostinfo=tree_sub.xpath('//div[@class="top_dealer_1"]/ul/li/text()')
+
+# 标题
+pattern=re.compile(r'\s(\w+)')
+result=pattern.search(title[0])
+print(result.group(1))
+
+#日期
+pattern=re.compile(r'(.+?)\xa0')
+result=pattern.search(date[0])
+#print(result.group(1))
+
+pattern=re.compile(r'(年|月)')
+result1=pattern.sub("/",result.group(1))
+#print(result1)
+
+pattern=re.compile(r'(日)')
+result2=pattern.sub("",result1)
+#print(result2)
+
+pattern=re.compile(r'---')
+result3=pattern.sub("---2019/",result2)
+print(result3)
+
+#展馆
+print(pavilion[1])
+
+#主办单位
+pattern=re.compile(r'：(.+)')
+result=pattern.search(host[0])
+print(result.group(1))
+
+#承办单位
+pattern=re.compile(r'：(.+)')
+result=pattern.search(host[1])
+print(result.group(1))
+
+#官网
+pattern=re.compile(r'((www|http).+?)\'')
+result=pattern.search(str(hostinfo))
+print(result.group(1))
 
 print(title,date,pavilion,host,hostinfo)
 
