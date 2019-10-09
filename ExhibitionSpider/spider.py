@@ -24,11 +24,11 @@ for val in subpage:
     hostinfo=tree_sub.xpath('//div[@class="top_dealer_1"]/ul/li/text()')
 
     # 标题
-    pattern=re.compile(r'\s(\w+)')
+    pattern=re.compile(r'(\S+)')
     result=pattern.search(title[0])
     #print(result.group(1))
-
-    lists[loopControlVar][0]=result.group(1)
+    if result:
+        lists[loopControlVar][0]=result.group(1)
 
     #日期
     pattern=re.compile(r'(.+?)\xa0')
@@ -46,8 +46,8 @@ for val in subpage:
     pattern=re.compile(r'---')
     result3=pattern.sub("---2019/",result2)
     #print(result3)
-
-    lists[loopControlVar][1]=result3
+    if result:
+        lists[loopControlVar][1]=result3
 
     #展馆
     #print(pavilion[1])
