@@ -1,6 +1,9 @@
 import requests
 import re
 from lxml import html
+import xlwings as xw
+import xlrd
+import xlwt
 
 lists=[["none" for j in range(10)] for i in range(50)]
 
@@ -45,9 +48,19 @@ for val in subpage:
 
     pattern=re.compile(r'---')
     result3=pattern.sub("---2019/",result2)
+
+    pattern=re.compile(r'/([0-9])-')
+    result4=pattern.sub(r"/0\1-",result3)
+
+    pattern=re.compile(r'/([0-9])$')
+    result5=pattern.sub(r"/0\1",result4)
+
+    pattern=re.compile(r'/([0-9])/')
+    result6=pattern.sub(r"/0\1/",result5)
+
     #print(result3)
     if result:
-        lists[loopControlVar][1]=result3
+        lists[loopControlVar][1]=result6
 
     #展馆
     #print(pavilion[1])
@@ -79,4 +92,14 @@ for val in subpage:
     
     loopControlVar+=1
 
-print(lists)
+workbook = xlwt.Workbook(encoding='utf-8') #创建workbook 对象
+worksheet = workbook.add_sheet('sheet1')   #创建工作表sheet
+for index in range(len(lists)):
+    worksheet.write(index, 1, lists[index][0]) 
+    worksheet.write(index, 2, lists[index][1]) 
+    worksheet.write(index, 5, lists[index][2]) 
+    worksheet.write(index, 8, lists[index][3]) 
+    worksheet.write(index, 9, lists[index][4]) 
+    worksheet.write(index, 14, lists[index][5]) 
+
+workbook.save('xxxx.xls') 
