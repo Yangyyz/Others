@@ -5,10 +5,10 @@ import xlwings as xw
 import xlrd
 import xlwt
 
-lists=[["none" for j in range(10)] for i in range(50)]
+lists=[[" " for j in range(10)] for i in range(50)]
 
 website="http://www.onezh.com"
-url='http://www.onezh.com/zhanhui/2_998_0_0_20200101/20201231/' 
+url='http://www.onezh.com/zhanhui/1_1643_1683_0_20200901/20200930/' 
 page=requests.Session().get(url) 
 tree=html.fromstring(page.text) 
 
@@ -59,9 +59,12 @@ for val in subpage:
     pattern=re.compile(r'/([0-9])/')
     result6=pattern.sub(r"/0\1/",result5)
 
+    pattern=re.compile(r'\d.+\d$')
+    result7=pattern.search(result6).group(0)
+
     #print(result3)
     if result:
-        lists[loopControlVar][1]=result6
+        lists[loopControlVar][1]=result7
 
     #展馆
     #print(pavilion[1])
@@ -79,10 +82,11 @@ for val in subpage:
 
     #承办单位
     pattern=re.compile(r'：(.+)')
-    result=pattern.search(host[1])
-    #print(result.group(1))
-    if result:
-        lists[loopControlVar][4]=result.group(1)
+    if len(host) > 1:
+        result=pattern.search(host[1])
+        #print(result.group(1))
+        if result:
+            lists[loopControlVar][4]=result.group(1)
 
     #官网
     pattern=re.compile(r'((www|http).+?)\'')
@@ -92,32 +96,32 @@ for val in subpage:
         lists[loopControlVar][5]=result.group(1)
 
     #分类
-    for key in {"农业","种子","花卉"}:
+    for key in {"农业","种子","花卉","水果","农资","植保","农机"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "农业林业渔业及农副产品"
             lists[loopControlVar][7] = "农业"
 
-    for key in {"林业","森林","树"}:
+    for key in {"林业","森林","树","园艺"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "农业林业渔业及农副产品"
             lists[loopControlVar][7] = "林业"
     
-    for key in {"渔业","渔"}:
+    for key in {"渔业","渔","鱼","海洋"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "农业林业渔业及农副产品"
             lists[loopControlVar][7] = "渔业"
 
-    for key in {"畜牧业","牧"}:
+    for key in {"畜牧业","牧","宠"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "农业林业渔业及农副产品"
             lists[loopControlVar][7] = "畜牧业"
 
-    for key in {"农副产品加工","农副产品","农产品"}:
+    for key in {"农副产品加工","农副产品","农产品","乳业","乳制品"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "农业林业渔业及农副产品"
             lists[loopControlVar][7] = "农副产品加工"
 
-    for key in {"食品制造","食品"}:
+    for key in {"食品制造","食品","烘培"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "食品酒饮及服务"
             lists[loopControlVar][7] = "食品制造"
@@ -167,17 +171,17 @@ for val in subpage:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "造纸及纸制品印刷"
 
-    for key in {"化学原料和化学制品","化学"}:
+    for key in {"化学原料和化学制品","化学","化工","材料"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "化学原料和化学制品"
 
-    for key in {"橡胶和塑料制品","橡胶","塑料"}:
+    for key in {"橡胶和塑料制品","橡胶","塑料","橡塑","胶粘剂"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "橡胶和塑料制品"
 
-    for key in {"非金属矿物制品","非金属"}:
+    for key in {"非金属矿物制品","非金属","陶瓷"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "非金属矿物制品"
@@ -187,17 +191,17 @@ for val in subpage:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "通用设备制造"
 
-    for key in {"电气机械和器材","电气","机械"}:
+    for key in {"电气机械和器材","电气","机械","军博会","科技","机床","电力","照明","紧固件","线缆","LED","3D打印","防锈","工业","光电","科技","五金","磨具"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "电气机械和器材"
 
-    for key in {"电子器件"}:
+    for key in {"电子器件","电子"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "电子器件"
 
-    for key in {"仪器仪表","仪器","仪表"}:
+    for key in {"仪器仪表","仪器","仪表","传感器","衡器"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "仪器仪表"
@@ -207,22 +211,22 @@ for val in subpage:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "人工智能"
 
-    for key in {"环境保护及废弃资源综合利用","环保","资源利用","净水","新风"}:
+    for key in {"环境保护及废弃资源综合利用","环保","资源利用","净水","新风","太阳能","排水","节能","新能源"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "环境保护及废弃资源综合利用"
 
-    for key in {"金属制品机械和设备修理","设备维修"}:
+    for key in {"金属制品机械和设备修理","设备维修","管材"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "工业科技"
             lists[loopControlVar][7] = "金属制品机械和设备修理"
 
-    for key in {"铁路交通运输","高铁","铁路","地铁"}:
+    for key in {"铁路交通运输","高铁","铁路","地铁","轨道"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "交通运输仓储和邮政"
             lists[loopControlVar][7] = "铁路交通运输"
 
-    for key in {"道路交通运输","汽车","卡车","车"}:
+    for key in {"道路交通运输","汽车","卡车","车","汽摩"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "交通运输仓储和邮政"
             lists[loopControlVar][7] = "道路交通运输"
@@ -232,7 +236,7 @@ for val in subpage:
             lists[loopControlVar][6] = "交通运输仓储和邮政"
             lists[loopControlVar][7] = "水上交通运输"
 
-    for key in {"航空航天","飞机","航空","航天"}:
+    for key in {"航空航天","飞机","航空","航天","无人机"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "交通运输仓储和邮政"
             lists[loopControlVar][7] = "航空航天"
@@ -252,12 +256,12 @@ for val in subpage:
             lists[loopControlVar][6] = "交通运输仓储和邮政"
             lists[loopControlVar][7] = "其他运输设备及服务"
 
-    for key in {"计算机通信和其他电子设备","计算机","通信"}:
+    for key in {"计算机通信和其他电子设备","计算机","通信","智能硬件"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "信息传输软件和信息技术"
             lists[loopControlVar][7] = "计算机通信和其他电子设备"
 
-    for key in {"电信广播电视和卫星传输服务","电信","广播"}:
+    for key in {"电信广播电视和卫星传输服务","电信","广播","卫星"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "信息传输软件和信息技术"
             lists[loopControlVar][7] = "电信广播电视和卫星传输服务"
@@ -267,22 +271,22 @@ for val in subpage:
             lists[loopControlVar][6] = "信息传输软件和信息技术"
             lists[loopControlVar][7] = "互联网和相关服务"
 
-    for key in {"软件和信息技术","软件","信息技术"}:
+    for key in {"软件和信息技术","软件","信息技术","数据","嵌入式系统","智能交通","智慧","物联网"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "信息传输软件和信息技术"
             lists[loopControlVar][7] = "软件和信息技术"
 
-    for key in {"医药制造","药"}:
+    for key in {"医药制造","药","生物技术","医学"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "医疗健康"
             lists[loopControlVar][7] = "医药制造"
 
-    for key in {"医疗用品及器材","医疗器材","医疗用品","医疗器械"}:
+    for key in {"医疗用品及器材","医疗器材","医疗用品","医疗器械","疫","口腔","眼科"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "医疗健康"
-            lists[loopControlVar][7] = "医药制造"
+            lists[loopControlVar][7] = "医疗用品及器材"
 
-    for key in {"护理及其他医疗健康服务","护理","医疗健康"}:
+    for key in {"护理及其他医疗健康服务","护理","医疗健康","康复","养老","老龄","健康产业","健康产品","营养","保健","健康","养生"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "医疗健康"
             lists[loopControlVar][7] = "护理及其他医疗健康服务"
@@ -317,7 +321,7 @@ for val in subpage:
             lists[loopControlVar][6] = "房屋建筑装修及经营服务"
             lists[loopControlVar][7] = "建筑安装"
 
-    for key in {"建筑装饰和其他建筑业","装修","家博会"}:
+    for key in {"建筑装饰和其他建筑业","装修","家博会","涂料","供暖"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "房屋建筑装修及经营服务"
             lists[loopControlVar][7] = "建筑装饰和其他建筑业"
@@ -357,7 +361,7 @@ for val in subpage:
             lists[loopControlVar][6] = "租赁和商务服务"
             lists[loopControlVar][7] = "旅行及相关服务"
 
-    for key in {"安全保护服务","安全","保护","安防","安保"}:
+    for key in {"安全保护服务","安全","保护","安防","安保","应急"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "租赁和商务服务"
             lists[loopControlVar][7] = "安全保护服务"
@@ -367,12 +371,12 @@ for val in subpage:
             lists[loopControlVar][6] = "租赁和商务服务"
             lists[loopControlVar][7] = "电子商务"
 
-    for key in {"其他商务服务业","加盟"}:
+    for key in {"其他商务服务业","加盟","品牌","公益","环博会","丝绸之路","研讨会","洽谈会"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "租赁和商务服务"
             lists[loopControlVar][7] = "其他商务服务业"
 
-    for key in {"纺织面料服装及服饰","服饰","时装"}:
+    for key in {"纺织面料服装及服饰","服饰","时装","服装","针织","纺织","纱线"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "纺织面料服装及服饰"
@@ -387,12 +391,12 @@ for val in subpage:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "家用电器及电子产品"
 
-    for key in {"玩具"}:
+    for key in {"玩具","模型"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "玩具"
 
-    for key in {"化妆品卫生用品及美容美发服务","化妆品","卫生用品","美容","美发"}:
+    for key in {"化妆品卫生用品及美容美发服务","化妆品","卫生用品","美容","美发","美博会"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "化妆品卫生用品及美容美发服务"
@@ -427,7 +431,7 @@ for val in subpage:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "婚庆设施及服务"
 
-    for key in {"其他产品及服务","消费品"}:
+    for key in {"其他产品及服务","消费品","商品","交易","特卖","展销","贸易"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "日用消费品及居民服务"
             lists[loopControlVar][7] = "其他产品及服务"
@@ -437,7 +441,7 @@ for val in subpage:
             lists[loopControlVar][6] = "教育"
             lists[loopControlVar][7] = "教育"
 
-    for key in {"教育机构及培训"}:
+    for key in {"教育机构及培训","幼儿园","幼教"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "教育"
             lists[loopControlVar][7] = "教育机构及培训"
@@ -457,12 +461,12 @@ for val in subpage:
             lists[loopControlVar][6] = "文化体育和娱乐"
             lists[loopControlVar][7] = "广播电视电影和影视制作"
 
-    for key in {"文化艺术","艺术","文化","佛"}:
+    for key in {"文化艺术","艺术","文化","佛文化","石博会"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "文化体育和娱乐"
             lists[loopControlVar][7] = "文化艺术"
 
-    for key in {"体育","运动"}:
+    for key in {"体育","运动","马术","健身"}:
         if key in lists[loopControlVar][0]:
             lists[loopControlVar][6] = "文化体育和娱乐"
             lists[loopControlVar][7] = "体育"
