@@ -8,7 +8,7 @@ import xlwt
 lists=[[" " for j in range(10)] for i in range(50)]
 
 website="http://www.onezh.com"
-url='http://www.onezh.com/zhanhui/1_1643_1683_0_20200901/20200930/' 
+url='http://www.onezh.com/zhanhui/1_21_0_0_20200901/20200930/' 
 page=requests.Session().get(url) 
 tree=html.fromstring(page.text) 
 
@@ -88,6 +88,14 @@ for val in subpage:
         if result:
             lists[loopControlVar][4]=result.group(1)
 
+    #是否政府举办
+    if "政府" in lists[loopControlVar][4]:
+        lists[loopControlVar][8] = "是"
+    if "政府" in lists[loopControlVar][3]:
+        lists[loopControlVar][8] = "是"
+    else:
+        lists[loopControlVar][8] = "否"
+              
     #官网
     pattern=re.compile(r'((www|http).+?)\'')
     result=pattern.search(str(hostinfo))
@@ -489,6 +497,8 @@ for index in range(len(lists)):
     worksheet.write(index, 14, lists[index][5])
     worksheet.write(index, 10, lists[index][6])
     worksheet.write(index, 11, lists[index][7])
+    worksheet.write(index, 27, "否")
+    worksheet.write(index, 28, lists[index][8])
     
 
 workbook.save('xxxx.xls') 
