@@ -89,12 +89,11 @@ for val in subpage:
             lists[loopControlVar][4]=result.group(1)
 
     #是否政府举办
+    lists[loopControlVar][8] = "否"
     if "政府" in lists[loopControlVar][4]:
         lists[loopControlVar][8] = "是"
     if "政府" in lists[loopControlVar][3]:
         lists[loopControlVar][8] = "是"
-    else:
-        lists[loopControlVar][8] = "否"
               
     #官网
     pattern=re.compile(r'((www|http).+?)\'')
